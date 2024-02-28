@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Post Recipe{% endblock %}
+
+{% block content %}
+
+  <div class="container mt-4">
+    
+    <h1 class="text-center">Post a New Recipe</h1>
+    
+    <form method="POST" action="{{ url_for('views.post_recipe') }}" class="mt-4">
+      <div class="form-group">
+        <label for="title">Title :</label>
+        <input type="text" class="form-control" placeholder="Type the recipe title." name="title" required>
+      </div>
+
+      <div class="form-group">
+        <label for="ingredients">Ingredients:</label>
+        <textarea class="form-control" name="ingredients" placeholder="Type the ingredients." rows="5" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="preparation_steps">Preparation Steps:</label>
+        <textarea class="form-control" name="preparation_steps" placeholder="Type the preparation steps." rows="5" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="cooking_time">Cooking Time:</label>
+        <div class="input-group">
+          <input type="number" class="form-control" name="cooking_time_hours" placeholder="Hrs" min="0">
+          <div class="input-group-append">
+            <span class="input-group-text">hours</span>
+          </div>
+          <input type="number" class="form-control" name="cooking_time_minutes" placeholder="Min" min="0" max="59">
+          <div class="input-group-append">
+            <span class="input-group-text">minutes</span>
+          </div>
+          
+          <input type="hidden" class="form-control" name="cooking_time" id="cooking_time_total">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="category_id">Category :</label>
+        <select name="category_id" id="category_id" class="form-control">
+          {% for category in predefined_categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    
+      <div class="form-group">
+        <label for="cuisine_type_id">Cuisine Type :</label>
+        <select name="cuisine_type_id" id="cuisine_type_id" class="form-control">
+          {% for cuisine_type in predefined_cuisine_types %}
+            <option value="{{ cuisine_type.id }}">{{ cuisine_type.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="tag_id">Tag :</label>
+        <select name="tag_id" id="tag_id" class="form-control">
+          {% for tag in predefined_tags %}
+            <option value="{{ tag.id }}">{{ tag.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="images">Images :</label>
+        <input type="text" class="form-control" name="images" placeholder="Enter a (URL or file path).">
+      </div>
+
+      <div class="form-group">
+        <label for="videos">Videos :</label>
+        <input type="text" class="form-control" name="videos" placeholder="Enter a (URL or file path).">
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg">Post Recipe</button>
+    </form>
+
+    <a href="{{ url_for('views.home') }}" class="btn btn-secondary btn-block mt-3">Back to Home</a>
+  </div>
+
+  <script>
+    document.addEventListener('input', function (event) {
+      if (event.target.name === 'cooking_time_hours' || event.target.name === 'cooking_time_minutes') {
+        updateCookingTimeTotal();
+      }
+    });
+    
+    function updateCookingTimeTotal() {
+      const hours = parseInt(document.querySelector('input[name="cooking_time_hours"]').value, 10) || 0;
+      const minutes = parseInt(document.querySelector('input[name="cooking_time_minutes"]').value, 10) || 0;
+      const totalMinutes = hours * 60 + minutes;
+      
+      document.getElementById('cooking_time_total').value = totalMinutes;
+    }
+  </script>
+
+{% endblock %}

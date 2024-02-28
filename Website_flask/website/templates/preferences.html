@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Communication Preferences{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+
+                <h1 class="text-center">Your Communication Preferences</h1>
+
+                <h2 class="text-center mt-4">Your Recipes</h2>
+                {% if user.recipes %}
+                {% for recipe in user.recipes %}
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ url_for('views.recipe_detail', recipe_id=recipe.id) }}">
+                                    {{ recipe.title }}
+                                </a>
+                            </h5>
+                            <span class="badge badge-danger">{{ recipe.category.name }}</span>
+                            <span class="badge badge-warning">{{ recipe.cuisine_type.name }}</span>
+                            <span class="badge badge-success">{{ recipe.tag.name }}</span>
+
+                            {% if recipe.show_comments %}
+                                <span class="badge badge-success">Comments on</span>
+                            {% else %}
+                                <span class="badge badge-danger">Comments off</span>
+                                <p class="text-muted">You disabled comments on this recipe.</p>
+                            {% endif %}
+
+                            <form action="{{ url_for('views.toggle_comments', recipe_id=recipe.id) }}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-link btn-sm">
+                                    {% if recipe.show_comments %}
+                                        Disable Comments
+                                    {% else %}
+                                        Enable Comments
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-center mt-2">You have not posted any recipes yet.</p>
+                {% endif %}
+                <a href="{{ url_for('views.home') }}" class="btn btn-primary btn-block mt-3">Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

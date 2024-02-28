@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Start Conversation{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Start Conversation</h1>
+
+    <form method="post" action="{{ url_for('views.start_conversation') }}">
+        {% if followed_users %}
+            <div class="form-group">
+                <label for="receiver">Select a user:</label>
+                <select name="receiver" id="receiver" class="form-control mb-3">
+                    {% for user in followed_users %}
+                        <option value="{{ user.id }}">{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Start Conversation</button>
+        {% else %}
+            <p class="text-muted">No available users to start a conversation with.</p>
+        {% endif %}
+    </form>
+
+    <a href="{{ url_for('views.conversation') }}" class="btn btn-primary btn-block mt-3" aria-label="Back to Conversations">Back to Conversations</a>
+    <a href="{{ url_for('views.home') }}" class="btn btn-secondary btn-block mt-3">Back to Home</a>
+</div>
+{% endblock %}

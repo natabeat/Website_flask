@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-4">
+        <h1 class="text-center">Welcome to CookBooked</h1>
+        {% if not user.is_authenticated %}
+            <p class="text-center">Log In or Sign Up to access all features!</p>
+        {% endif %}
+
+        <form action="{{ url_for('views.search_recipes') }}" method="GET" class="mt-3">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search by ingredient..." name="query">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+        
+        {% if user.is_authenticated %}
+            <a href="{{ url_for('views.post_recipe') }}" class="btn btn-primary btn-block">Publish Recipe</a>
+            <a href="{{ url_for('views.filter_recipes') }}" class="btn btn-secondary btn-block">Filter Recipes</a>
+        {% endif %}
+
+        <h2 class="text-center mt-4">Latest Recipes</h2>
+        
+        {% for recipe in recipes %}
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5 class="card-title">
+                                <a href="{{ url_for('views.recipe_detail', recipe_id=recipe.id) }}">
+                                    {{ recipe.title }}
+                                </a>
+                            </h5>
+                            <p><b>Posted by:</b> <a href="{{ url_for('views.recipe_author', author_id=recipe.author.id) }}">{{ recipe.author.username }}</a></p>
+                            {% if recipe.images %}
+                                <img src="{{ recipe.images }}" alt="{{ recipe.title }}" class="img-fluid">
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

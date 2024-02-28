@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}For You{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-4">
+        <h1 class="text-center">Your Feed</h1>
+        <p class="lead text-center">Welcome to your For You page ! Here, you can find all your liked recipes, saved recipes, and comments. Only you have access to this page.</p>
+
+        <div class="mt-4">
+            <h2 class="mb-3">Liked Recipes</h2>
+            {% if liked_recipes %}
+                <ul class="list-group">
+                    {% for recipe in liked_recipes %}
+                        <li class="list-group-item">
+                            <a href="{{ url_for('views.recipe_detail', recipe_id=recipe.id) }}">
+                                {{ recipe.title }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No liked recipes yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="mt-4">
+            <h2 class="mb-3">Saved Recipes</h2>
+            {% if saved_recipes %}
+                <ul class="list-group">
+                    {% for recipe in saved_recipes %}
+                        <li class="list-group-item">
+                            <a href="{{ url_for('views.recipe_detail', recipe_id=recipe.id) }}">
+                                {{ recipe.title }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No saved recipes yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="mt-4">
+            <h2 class="mb-3">Your Comments</h2>
+            {% if comments %}
+                <ul class="list-group">
+                    {% for comment in comments %}
+                        <li class="list-group-item">
+                            <p><b>Recipe:</b> {{ comment.recipe.title }}</p>
+                            <a href="{{ url_for('views.recipe_detail', recipe_id=comment.recipe.id) }}">
+                                {{ comment.content }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No comments yet.</p>
+            {% endif %}
+        </div>
+
+        <a href="{{ url_for('views.home') }}" class="btn btn-primary btn-block mt-4">Back to Home</a>
+    </div>
+
+{% endblock %}

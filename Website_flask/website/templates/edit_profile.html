@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h1 class="text-center mb-4">Edit Profile</h1>
+
+                <form method="POST" action="{{ url_for('views.edit_profile') }}" class="mt-4">
+                    <div class="form-group">
+                        <label for="bio">Bio:</label>
+                        <textarea class="form-control" name="bio">{{ user.bio }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profile_image">Profile Image (URL):</label>
+                        <input type="text" class="form-control" name="profile_image" value=''>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profile_visibility">Profile visibility:</label>
+                        <select name="profile_visibility" class="form-control">
+                            <option value="public">Public</option>
+                            <option value="private">Private</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3 btn-block">Update Profile</button>
+                </form>
+
+                <a href="{{ url_for('views.user_profile') }}" class="btn btn-secondary mt-3 btn-block">Back to Profile</a>
+                <a href="{{ url_for('views.home') }}" class="btn btn-primary mt-3 btn-block">Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

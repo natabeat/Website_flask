@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Author Profile{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-4">
+        <h1 class="text-center">{{ author.username }}'s Profile</h1>
+
+            {% if author.profile_visibility == 'private' %}
+                <span class="badge badge-danger d-block text-center">Private</span>
+            {% else %}
+                <span class="badge badge-success d-block text-center">Public</span>
+            {% endif %}
+
+        <div class="text-center">
+            {% if author.profile_image %}
+            <img src="{{ author.profile_image }}" class="img-fluid rounded-circle" style="width: 150px; height: 150px;">
+            {% else %}
+            <img src="{{ url_for('static', filename='profile_basic.webp') }}" class="img-fluid rounded-circle" style="width: 150px; height: 150px;">
+            {% endif %}
+        </div>
+        <p class="text-center"><b>Bio :</b> {{ author.bio }}</p>
+
+        {% if current_user.is_authenticated and current_user.id != author.id %}
+            <form action="{{ url_for('views.send_message', receiver_id=author.id) }}" method="post" class="text-center">
+                <button type="submit" class="btn btn-primary mt-3">Chat with {{ author.username }}</button>
+            </form>
+        {% endif %}
+
+        <h2 class="text-center">Recipes by {{ author.username }}</h2>
+        {% if author.recipes %}
+            {% for recipe in author.recipes %}
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ url_for('views.recipe_detail', recipe_id=recipe.id) }}">
+                                {{ recipe.title }}
+                            </a>
+                        </h5>
+                        <span class="badge badge-danger">{{ recipe.category.name }}</span>        
+                        <span class="badge badge-warning">{{ recipe.cuisine_type.name }}</span>
+                        <span class="badge badge-success">{{ recipe.tag.name }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center">{{ author.username }} has not posted any recipes yet.</p>
+        {% endif %}
+
+        <h3 class="text-center">{{ author.username }}'s Followers :</h3>
+            <ul class="list-unstyled text-center">
+                {% for follower in followers %}
+                    <li><a href="{{ url_for('views.follower_profile', follower_id=follower.follower.id) }}">{{ follower.follower.username }}</a></li>
+                {% endfor %}
+            </ul>
+
+            <h3 class="text-center">Users Followed by {{ author.username }} :</h3>
+            <ul class="list-unstyled text-center">
+                {% for following_user in following %}
+                    <li><a href="{{ url_for('views.following_profile', following_id=following_user.following.id) }}">{{ following_user.following.username }}</a></li>
+                {% endfor %}
+            </ul>
+            
+        {% if current_user.is_authenticated and current_user.id != author.id %}
+            {% if current_user.is_following(author) %}
+                <form action="{{ url_for('follow.unfollow_user', author_id=author.id) }}" method="post" class="text-center">
+                    <button type="submit" class="btn btn-danger mt-3">Unfollow</button>
+                </form>
+            {% else %}
+                <form action="{{ url_for('follow.follow_user', author_id=author.id) }}" method="post" class="text-center">
+                    <button type="submit" class="btn btn-primary mt-3">Follow</button>
+                </form>
+            {% endif %}
+        {% endif %}
+
+        <a href="{{ url_for('views.home') }}" class="btn btn-primary btn-block mt-3">Back to Home</a>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Filtered Recipe{% endblock %}
+
+{% block content %}
+
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-3">
+        <form action="{{ url_for('views.filter_recipes') }}" method="get">
+          <div class="form-group">
+            <label for="tag">Tag :</label>
+            <select name="tag" class="form-control">
+              <option value="">-- All --</option>
+              {% for tag in tags %}
+                <option value="{{ tag.id }}">{{ tag.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cuisine_type">Cuisine Type :</label>
+            <select name="cuisine_type" class="form-control">
+              <option value="">-- All --</option>
+              {% for cuisine_type in cuisine_types %}
+                <option value="{{ cuisine_type.id }}">{{ cuisine_type.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category :</label>
+            <select name="category" class="form-control">
+              <option value="">-- All --</option>
+              {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Filter</button>
+        </form>
+      </div>
+
+      <div class="col-md-9">
+        <h2 class="text-center mt-4">Filtered Recipes</h2>
+        {% if recipes %}
+        {% for recipe in recipes %}
+        <div class="card mt-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5 class="card-title">
+                            <a href="{{ url_for('views.recipe_detail', recipe_id=recipe.id) }}">
+                                {{ recipe.title }}
+                            </a>
+                        </h5>
+                        <p><b>Posted by:</b> <a href="{{ url_for('views.recipe_author', author_id=recipe.author.id) }}">{{ recipe.author.username }}</a></p>
+                        {% if recipe.images %}
+                            <img src="{{ recipe.images }}" alt="{{ recipe.title }}" class="img-fluid">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+          <p class="text-center">No recipes found matching the selected criteria.</p>
+        {% endif %}
+    </div>
+
+{% endblock %}
